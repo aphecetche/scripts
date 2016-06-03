@@ -1,0 +1,1 @@
+rsync -av "$HOME/saf3" "$HOME/saf3backup/"

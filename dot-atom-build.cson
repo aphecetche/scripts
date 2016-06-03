@@ -1,0 +1,54 @@
+cmd: "$HOME/Scripts/aliceo2-atom-build.sh"
+name: "build all"
+atomCommandName: "o2:make AliRoot all"
+args: [
+           "Debug"
+           "FairSoft/AliRoot"
+           "make"
+        ]
+
+errorMatch: [
+        "(?<file>[\\/0-9a-zA-Z\\._\\-]+):(?<line>\\d+):(?<col>\\d+): error:"
+]
+sh: true
+targets:
+
+    cAliRoot:
+      cmd: "$HOME/Scripts/aliceo2-atom-build.sh"
+      name: "AliRoot"
+      args: [
+           "Debug"
+           "FairSoft/AliRoot"
+           "cmake"
+        ]
+      atomCommandName: "o2:cmake aliroot"
+      errorMatch: [
+        "(?<file>[\\/0-9a-zA-Z\\._\\-]+):(?<line>\\d+):(?<col>\\d+): error:"
+      ]
+
+    AliRoot:
+      cmd: "$HOME/Scripts/aliceo2-atom-build.sh"
+      name: "AliRoot/HLT"
+      args: [
+           "Debug"
+           "FairSoft/AliRoot"
+           "make"
+        ]
+      atomCommandName: "o2:make aliroot"
+      errorMatch: [
+        "(?<file>[\\/0-9a-zA-Z\\._\\-]+):(?<line>\\d+):(?<col>\\d+): error:"
+      ]
+
+    HLT:
+      cmd: "$HOME/Scripts/aliceo2-atom-build.sh"
+      name: "AliRoot"
+      args: [
+           "Debug"
+           "FairSoft/AliRoot"
+           "make"
+           "HLT"
+        ]
+      atomCommandName: "o2:make aliroot HLT"
+      errorMatch: [
+        "(?<file>[\\/0-9a-zA-Z\\._\\-]+):(?<line>\\d+):(?<col>\\d+): error:"
+      ]
