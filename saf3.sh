@@ -18,3 +18,5 @@ else
 	gsissh -t -p 1975 nansafmaster3.in2p3.fr bash
 fi
 
+
+sshfs -o ssh_command="gsissh -p1975" nansafmaster3.in2p3.fr:/home/laphecet ~/saf3

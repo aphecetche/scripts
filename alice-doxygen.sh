@@ -8,7 +8,7 @@
 #
 # dox MyClass
 
-EXE=/Applications/Doxygen.app/Contents/Resources/doxygen
+EXE=/usr/local/bin/doxygen
 
 OFILE=doxygen.config.single
 
@@ -17,6 +17,9 @@ echo "INPUT = ." >> $OFILE
 echo "FILE_PATTERNS = $1.*" >> $OFILE
 echo "WARNINGS = YES" >> $OFILE
 echo "WARN_IF_UNDOCUMENTED   = YES" >> $OFILE
+echo "EXTRACT_PRIVATE = YES" >> $OFILE
+echo "GENERATE_LATEX = NO" >> $OFILE
+echo "WARN_AS_ERROR = YES" >> $OFILE
 
 $EXE $OFILE
 
