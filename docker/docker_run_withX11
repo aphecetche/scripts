@@ -1,0 +1,22 @@
+#!/bin/sh
+
+dxquartz_if_not_running() {
+	defaults write org.macosforge.xquartz.X11 nolisten_tcp 0
+
+	defaults write org.macosforge.xquartz.X11 app_to_run /usr/bin/true
+
+	[[ "$(launchctl list | grep startx | cut -c 1)" == "-" ]] && open -a XQuartz
+
+}
+
+case "$OSTYPE" in
+darwin*)
+	dxquartz_if_not_running
+	xhost +$(dgetmyip) >/dev/null
+	docker run -e DISPLAY=$(dgetmyip):0 -v /tmp/.X11-unix:/tmp/.X11-unix -e TZ="Europe/Paris" $@
+	;;
+linux*)
+	xhost + >/dev/null
+	docker run -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /etc/localtime:/etc/localtime -e TZ="Europe/Paris" } $@
+	;;
+esac

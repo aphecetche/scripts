@@ -1,0 +1,7 @@
+#!/bin/sh
+# Remove untagged images
+drmi() {
+	docker rmi $(docker images | grep "<none>" | awk '{print $3}')
+}
+
+drmi

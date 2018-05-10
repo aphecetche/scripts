@@ -1,0 +1,56 @@
+#!/bin/sh
+
+getdirlist() {
+	for par in $@; do
+		abs_path=$(unset CDPATH && cd "$(dirname $par)" >/dev/null 2>&1 && pwd) && printf "\"%s\"\\n" $abs_path
+	done
+}
+
+dvim() {
+
+	# must get a list of basedirs in order to insure we are
+	# mounting them in the container
+
+	firstdir=""
+	cmd="docker run -it --rm -e BASE16_THEME=$BASE16_THEME "
+
+	for dir in $(getdirlist $@ | sort | uniq); do
+		# printf "%s\\n" "dir=$dir"
+		cmd="$cmd -v \"$dir\":\"$dir\""
+		# printf "%s\n" "cmd=$cmd"
+		if [ -n "$firstdir" ]; then
+			firstdir="$dir"
+			cmd="$cmd -w $firstdir"
+		fi
+	done
+
+	if test -n "$DVIM_LIVEDOWN_PORT"; then
+		cmd="$cmd -p $DVIM_LIVEDOWN_PORT:$DVIM_LIVEDOWN_PORT"
+	fi
+	if test -n "$DVIM_YCM_EXTRA_CONF"; then
+		cmd="$cmd -v $DVIM_YCM_EXTRA_CONF:$HOME/.ycm_extra_conf.py"
+	fi
+	if test -n "$DVIM_DOCKER"; then
+		# docker options passed "as is"
+		cmd="$cmd $DVIM_DOCKER"
+	fi
+	if test -n "$DVIM_GO"; then
+		cmd="$cmd -v vc_go_tools:/go -e GOPATH=$GOPATH -v $GOPATH:$GOPATH"
+	fi
+	cmd="$cmd dvim-$USER"
+	for par in $@; do
+		abs_path=$(cd $(dirname "$par") >/dev/null 2>&1 && pwd) && cmd="$cmd \"$abs_path/$(basename $par)\"" || (touch $par && cmd="$cmd \"$abs_path/$(basename $par)\"")
+	done
+
+	if test -n "$DVIM_DEBUG"; then
+		echo "cmd=$cmd"
+	else
+		eval $cmd
+	fi
+	unset dir
+	unset firstdir
+	unset cmd
+	unset abs_path
+}
+
+dvim $@

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Remove dangling volumes
+# but exclude from the purge everything starting with vc_
+# i.e. the ones created explicitly
+drmv() {
+	docker volume rm $(docker volume ls -qf dangling=true | grep -v $1)
+}
+
+reg=${1:-^vc_}
+
+drmv $reg

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+dvolume2archive() {
+	# make a tar.gz of a docker volume
+	local volume_name=$1
+
+	$(docker volume ls | grep $volume_name 2>&1 >/dev/null) &&
+		{
+			docker run -it --rm -v $volume_name:/data -v $(pwd):/backup alpine:3.5 tar zcvf /backup/$volume_name.tar.gz /data &&
+				printf "%s\\n" "archive $volume_name.tar.gz successfully created" ||
+				printf "%s\\n" "could not create archive $volume_name"
+		} ||
+		printf "%s\\n" "volume $volume_name does not exist. Can not archive it !"
+}
+
+dvolume2archive $1
