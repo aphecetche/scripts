@@ -1,0 +1,52 @@
+#%Modules1.0
+proc ModulesHelp { } {
+    puts stderr "Setup environment for docker"
+}
+
+module-whatis "environment for using docker"
+
+append-path PATH $::env(HOME)/scripts/docker
+
+# shortcut to docker-compose
+set-alias dc "docker-compose"
+
+# Get latest container ID
+set-alias dl { docker ps -l -q }
+
+# Get container process
+set-alias dps { docker ps }
+
+# Get process included stop container
+set-alias dpa { docker ps -a }
+
+# Get images
+set-alias di { docker images }
+
+# Show volumes
+set-alias dv { docker volume ls }
+
+# Get latest container ID
+set-alias dl { docker ps -l -q }
+
+# Show volumes
+set-alias dv { docker volume ls }
+
+# Stop all containers
+set-alias dstop {docker stop $(docker ps -a -q)}
+
+# Remove all containers
+set-alias drma {docker rm $(docker ps -a -q)}
+
+# Stop and Remove all containers
+set-alias drmf {docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)}
+
+# Remove all images
+set-alias drmia  {docker rmi $(docker images -q)}
+
+# remove stopped containers
+set-alias drm {docker rm $(docker ps -q -f status=exited)}
+
+if { [ uname sysname ] == "Darwin" } {
+    # get access to underlying virtual machine
+    set-alias dvm { screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty }
+}    
