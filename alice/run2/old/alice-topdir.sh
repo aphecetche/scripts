@@ -1,0 +1,4 @@
+
+export ALICETOPDIR="$HOME/Alice"
+
+
