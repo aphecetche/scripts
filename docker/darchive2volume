@@ -7,9 +7,12 @@ darchive2volume() {
 
 	local volume_name=$2
 
-	local archive_dir=$(dirname $1)
+	local archive_dir=$(cd $(dirname $1) && pwd)
 	local archive=$(basename $1)
 
+    echo "volume_name=$volume_name"
+	echo "archive_dir=$archive_dir archive=$archive"
+	
 	$(docker volume ls | grep $volume_name >/dev/null 2>&1)
 
 	if [ $? = 0 ]; then
