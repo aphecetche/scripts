@@ -1,1 +1,12 @@
-rsync -av "$HOME/saf3" "$HOME/saf3backup/"
+rsync -av "$HOME/saf3" "$HOME/saf3backup/" \
+    --exclude "*.git" \
+    --exclude "*.proof" \
+    --exclude "*.gem" \
+    --exclude "*RC-5286*" \
+    --exclude "*.o" \
+    --exclude "*.so" \
+    --exclude "*.a" \
+    --exclude "*data/alice/data/*" \
+    --exclude "*.root" \
+    --exclude "*.md5sum" \
+    --exclude "*.tgz"
