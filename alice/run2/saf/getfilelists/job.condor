@@ -1,0 +1,13 @@
+universe=vanilla
+executable = getfilelists.sh 
+
+log = getfilelists.$(Cluster).log
+output = getfilelists.$(Cluster).$(Process).out
+error = getfilelists.$(Cluster).$(Process).err
+should_transfer_files = yes
+when_to_transfer_output = ON_EXIT
+rank=-SlotID
+
+queue 10
+
+
