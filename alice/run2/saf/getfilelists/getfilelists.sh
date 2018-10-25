@@ -1,10 +1,15 @@
 #!/bin/sh
 
 export machine=$(hostname -s)
-output=$machine.filelist.txt
+output=$machine.files.list
+legacy=${1:-no}
 
 echo "#!/bin/sh" > $output
-find /data -name *.root -type f -exec stat -c "%s %Y %n" {} \; | awk '{print strftime("%a %d.%m.%Y %H:%M:%S ",$2)  $1 " " $3 " SAF-" ENVIRON["machine"] }' > $output
 
-#find /data -name "*" -maxdepth 4 -type d -exec du -s {} \; | sort -nr > $output
+if [[ "$legacy" == "yes" ]]; then
+  find /data -name *.root -type f -exec stat -c "%s %Y %n" {} \; | awk '{print strftime("%a %d.%m.%Y %H:%M:%S ",$2)  $1 " " $3 " SAF-" ENVIRON["machine"] }' > $output
+else
+  find /data -name *.root -type f -exec stat -c "%s %Y %X %n" {} \; | awk '{print $2 " " $3 " " $1 " " $4 " SAF-" ENVIRON["machine"] }' > $output
+fi
+
 

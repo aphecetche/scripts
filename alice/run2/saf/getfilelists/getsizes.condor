@@ -1,0 +1,14 @@
+universe=vanilla
+executable = getsizes.sh 
+
+log = getsizes.$(Cluster).log
+output = getsizes.$(Cluster).$(Process).out
+error = getsizes.$(Cluster).$(Process).err
+should_transfer_files = yes
+when_to_transfer_output = ON_EXIT
+rank=-SlotID
+
+arguments = /data/alice/data 2
+queue 10
+
+
