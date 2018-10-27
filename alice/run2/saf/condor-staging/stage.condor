@@ -1,0 +1,17 @@
+universe=vanilla
+executable=stage.sh
+
+log = stage.$(Cluster).log
+output = stage.$(Cluster).$(Process).out
+error = stage.$(Cluster).$(Process).err
+
+should_transfer_files = yes
+when_to_transfer_output = ON_EXIT
+
+transfer_input_file = /tmp/x509up_u$ENV(UID)
+environment = "X509_USER_PROXY=/tmp/x509up_u$ENV(UID)"
+
+requirements = TARGET.Machine=="nansaf09.in2p3.fr"
+arguments = nansaf09 /alice/data/2015/LHC15o/000246087/pass1/15000246087039.9814/AliESDs.root
+queue
+
