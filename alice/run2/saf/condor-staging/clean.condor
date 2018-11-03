@@ -1,0 +1,12 @@
+universe=vanilla
+executable=clean.sh
+
+log = clean.$(Cluster).log
+output = clean.$(Cluster).$(Process).out
+error = clean.$(Cluster).$(Process).err
+
+should_transfer_files = yes
+
+rank = -slotID
+queue 10
+
