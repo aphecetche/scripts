@@ -2,8 +2,8 @@ universe=vanilla
 executable=stage-one.sh
 
 log = stage.$(Cluster).log
-output = stage.$(Cluster).$(Process).out
-error = stage.$(Cluster).$(Process).err
+output = stage.$(Cluster).$(Process).$(host).out
+error = stage.$(Cluster).$(Process).$(host).err
 
 should_transfer_files = yes
 when_to_transfer_output = ON_EXIT
