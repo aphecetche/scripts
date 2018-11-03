@@ -16,7 +16,6 @@ workdir=$prefix
 hosts=( nansaf02 nansaf03 nansaf04 nansaf05 nansaf06 nansaf07 nansaf08 nansaf09 nansaf11 )
 
 index=0
-n=0
 
 # create the output working directory, named
 # from the file list prefix
@@ -37,10 +36,6 @@ do
     (( index++ ))
     if [[ $index -ge ${#hosts[*]} ]]; then
      index=0
-     (( n++ )) 
-    fi
-    if [[ $n -eq 2 ]]; then
-       break
     fi
   fi
 done
