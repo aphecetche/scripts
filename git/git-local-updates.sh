@@ -20,7 +20,7 @@ function checkdir() {
 }
 
 
-for d in $(find $dir -not \( -path $HOME/Library -prune \) -not \( -path $HOME/alice/sw -prune \) -type d -name .git); do
+for d in $(find $dir -not \( -path $HOME/Library -prune \) -not \( -path $HOME/alice/sw -prune \) -not \( -path $HOME/CERNBox -prune \) -not \( -path $HOME/ownCloud -prune \) -type d -name .git); do
         r=$(checkdir $d)
         if [[ ${#r} -eq 0 ]]; then
                 r="CLEAN"
