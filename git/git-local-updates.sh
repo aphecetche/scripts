@@ -19,7 +19,8 @@ function checkdir() {
         popd > /dev/null
 }
 
-for d in $(find $dir -name .git -type d); do
+
+for d in $(find $dir -not \( -path $HOME/Library -prune \) -not \( -path $HOME/alice/sw -prune \) -type d -name .git); do
         r=$(checkdir $d)
         if [[ ${#r} -eq 0 ]]; then
                 r="CLEAN"
