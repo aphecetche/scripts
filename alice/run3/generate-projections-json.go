@@ -16,7 +16,7 @@ func generate(w io.Writer) {
 	fmt.Fprintf(w, "{\n")
 	generateAlternates(w)
 
-	clangTidyBinary := "$HOME/alice/sw/osx_x86-64/latest/bin/o2codechecker"
+	clangTidyBinary := "$HOME/alice/sw/osx_x86-64/latest/o2codechecker/bin/O2codecheck"
 
 	fmt.Fprintf(w, "\"*.cxx\" : { \"clang-tidy-binary\":\"%s\" }\n",
 		clangTidyBinary)
