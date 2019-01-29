@@ -14,6 +14,16 @@ func alternate(w io.Writer, base, include string) {
 
 func generate(w io.Writer) {
 	fmt.Fprintf(w, "{\n")
+	generateAlternates(w)
+
+	clangTidyBinary := "$HOME/alice/sw/osx_x86-64/latest/bin/o2codechecker"
+
+	fmt.Fprintf(w, "\"*.cxx\" : { \"clang-tidy-binary\":\"%s\" }\n",
+		clangTidyBinary)
+	fmt.Fprintf(w, "}\n")
+}
+
+func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MCH/Simulation", "MCHSimulation")
 	alternate(w, "Detectors/MUON/MCH/Base", "MCHBase")
 	alternate(w, "Detectors/MUON/MCH/Mapping/SegContour", "MCHMappingSegContour")
@@ -22,15 +32,8 @@ func generate(w io.Writer) {
 	alternate(w, "Detectors/MUON/MID/Clustering", "MIDClustering")
 	alternate(w, "Detectors/MUON/MID/Tracking", "MIDTracking")
 	alternate(w, "Detectors/MUON/MID/TestingSimTools", "MIDTestingSimTools")
-	fmt.Fprintf(w, "}\n")
 }
 
 func main() {
-	// f, err := os.Create(".projections.json")
-
 	generate(os.Stdout)
 }
-
-// "             let proj = {  "Detectors/MUON/MCH/Simulation/include/MCHSimulation/*.h" : { "alternate": "Detectors/MUON/MCH/Simulation/src/{}.cxx" },
-// "                         \ "Detectors/MUON/MCH/Simulation/src/*.cxx" : { "alternate" : "Detectors/MUON/MCH/Simulation/include/MCHSimulation/{}.h" }
-// "                         \ }
