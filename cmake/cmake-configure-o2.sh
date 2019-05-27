@@ -38,7 +38,7 @@ cmake $source \
 -DCMAKE_CXX_STANDARD=17 \
 -DCMAKE_CXX_STANDARD_REQUIRED=TRUE \
 -DCMAKE_INSTALL_PREFIX=$install_prefix \
--DBUILD_TESTING=OFF \
+-DBUILD_TESTING=ON \
 -DCMAKE_BUILD_TYPE=$buildtype \
 -DDDS_ROOT=$deplocation/$platform/DDS/$version \
 -Dprotobuf_ROOT=$deplocation/$platform/protobuf/$version \
