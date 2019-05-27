@@ -5,16 +5,17 @@
 # for some reason the FairRoot/FindPythia6.cmake is looking for libPythia with a capital P. So pythia6 is found
 # iif Pythia6_LIBRARY_DIR points to the correct directory directly...
 
-simulation=${1:+1}
+simulation=${1:no}
+buildtype=${2:Debug}
+generator=${3:Ninja}
 
-generator=Ninja
 source=$HOME/alice/tests/O2
 deplocation=$HOME/alice/tests/sw
 dest=$HOME/alice/tests/sw/
 version=latest
 label=standalone
 
-install_prefix=$HOME/alice/tests/standalone/O2/install
+install_prefix=$HOME/alice/tests/standalone/O2/install-${buildtype}
 
 case $OSTYPE in
 linux*)
@@ -29,51 +30,8 @@ darwin*)
 	;;
 esac
 
-
-
-simcmd=$(
-	cat <<EOF
-cmake $source \
-\
--G "$generator" \
--DCMAKE_CXX_STANDARD=17 \
--DCMAKE_CXX_STANDARD_REQUIRED=TRUE \
--DCMAKE_INSTALL_PREFIX=$install_prefix \
--DBUILD_TESTING=ON \
--DBUILD_SIMULATION=ON \
--DCMAKE_BUILD_TYPE=Debug \
--DDDS_ROOT=$deplocation/$platform/DDS/$version \
--Dprotobuf_ROOT=$deplocation/$platform/protobuf/$version \
--DCommon_ROOT=$deplocation/$platform/Common-O2/$version \
--DConfiguration_ROOT=$deplocation/$platform/Configuration/$version \
--DMonitoring_ROOT=$deplocation/$platform/Monitoring/$version \
--DFairMQ_ROOT=$deplocation/$platform/FairMQ/$version \
--DFairLogger_ROOT=$deplocation/$platform/FairLogger/$version \
--DFairRoot_ROOT=$deplocation/$platform/FairRoot/$version \
--DInfoLogger_ROOT=$deplocation/$platform/libInfoLogger/$version \
--DBOOST_ROOT=$deplocation/$platform/boost/$version \
--DROOTSYS=$deplocation/$platform/ROOT/$version \
--DCMAKE_MODULE_PATH="$source/cmake/modules;$deplocation/$platform/FairRoot/$version/share/fairbase/cmake/modules" \
--DFAIRROOTPATH=${FAIRROOTPATH} \
--DCMAKE_PREFIX_PATH="$deplocation/$platform/ROOT/$version;$deplocation/$platform/Vc/$version;$deplocation/$platform/GEANT3/$version;$deplocation/$platform/GEANT4/$version;$deplocation/$platform/vgm/$version"  \
--DPythia6_LIBRARY_DIR=$deplocation/$platform/pythia6/$version/lib \
--DPythia8_DIR=$deplocation/$platform/pythia/$version/ \
--DGeant3_DIR=$deplocation/$platform/GEANT3/$version \
--DGeant4_DIR=$deplocation/$platform/GEANT4/$version \
--DGEANT4VMC_DIR=$deplocation/$platform/GEANT4_VMC/$version/lib/Geant4VMC-3.6.3 \
--DVGM_DIR=$deplocation/$platform/vgm/$version \
--DProtobuf_LIBRARY=$deplocation/$platform/protobuf/$version/lib/libprotobuf.$ddlext \
--DProtobuf_LITE_LIBRARY=$deplocation/$platform/protobuf/$version/lib/libprotobuf-lite.$ddlext \
--DProtobuf_PROTOC_LIBRARY=$deplocation/$platform/protobuf/$version/lib/libprotoc.$ddlext \
--DProtobuf_INCLUDE_DIR=$deplocation/$platform/protobuf/$version/include \
--DProtobuf_PROTOC_EXECUTABLE=$deplocation/$platform/protobuf/$version/bin/protoc \
--DARROW_HOME=$deplocation/$platform/arrow/$version \
--Dbenchmark_DIR=$deplocation/$platform/googlebenchmark/$version/lib/cmake/benchmark 
-EOF
-)
-
-cmd=$(
-	cat <<EOF
+basecmd=$(
+cat << EOF
 cmake $source \
 \
 -G "$generator" \
@@ -81,7 +39,7 @@ cmake $source \
 -DCMAKE_CXX_STANDARD_REQUIRED=TRUE \
 -DCMAKE_INSTALL_PREFIX=$install_prefix \
 -DBUILD_TESTING=OFF \
--DCMAKE_BUILD_TYPE=Debug \
+-DCMAKE_BUILD_TYPE=$buildtype \
 -DDDS_ROOT=$deplocation/$platform/DDS/$version \
 -Dprotobuf_ROOT=$deplocation/$platform/protobuf/$version \
 -DCommon_ROOT=$deplocation/$platform/Common-O2/$version \
@@ -106,7 +64,25 @@ cmake $source \
 EOF
 )
 
-if [[ $simulation -eq 1 ]]; then
+simcmd=$(
+	cat <<EOF
+$basecmd \
+-DBUILD_SIMULATION=ON \
+-DCMAKE_PREFIX_PATH="$deplocation/$platform/ROOT/$version;$deplocation/$platform/Vc/$version;$deplocation/$platform/GEANT3/$version;$deplocation/$platform/GEANT4/$version;$deplocation/$platform/vgm/$version"  \
+-DPythia6_LIBRARY_DIR=$deplocation/$platform/pythia6/$version/lib \
+-DPythia8_DIR=$deplocation/$platform/pythia/$version/ \
+-DGeant3_DIR=$deplocation/$platform/GEANT3/$version \
+-DGeant4_DIR=$deplocation/$platform/GEANT4/$version \
+-DGEANT4VMC_DIR=$deplocation/$platform/GEANT4_VMC/$version/lib/Geant4VMC-3.6.3 \
+-DVGM_DIR=$deplocation/$platform/vgm/$version
+EOF
+)
+
+cmd=$(
+echo $basecmd
+)
+
+if [[ "$simulation" == "yes" ]]; then
   echo "would do sim"
   eval "$simcmd"
 else
