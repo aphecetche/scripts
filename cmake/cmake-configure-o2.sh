@@ -5,17 +5,18 @@
 # for some reason the FairRoot/FindPythia6.cmake is looking for libPythia with a capital P. So pythia6 is found
 # iif Pythia6_LIBRARY_DIR points to the correct directory directly...
 
-simulation=${1:no}
-buildtype=${2:Debug}
-generator=${3:Ninja}
+simulation=${1:+no}
+buildtype=${2:+Debug}
+generator=${3:+Ninja}
+basedir=${4:+cmake}
 
-source=$HOME/alice/tests/O2
-deplocation=$HOME/alice/tests/sw
-dest=$HOME/alice/tests/sw/
+source=$HOME/alice/${basedir}/O2
+deplocation=$HOME/alice/${basedir}/sw
+dest=$HOME/alice/${basedir}/sw/
 version=latest
 label=standalone
 
-install_prefix=$HOME/alice/tests/standalone/O2/install-${buildtype}
+install_prefix=$HOME/alice/${basedir}/standalone/O2/install-${buildtype}
 
 case $OSTYPE in
 linux*)
