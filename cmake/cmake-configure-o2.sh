@@ -97,6 +97,7 @@ cmake $source \
 -DProtobuf_PROTOC_EXECUTABLE=$deplocation/$platform/protobuf/$version/bin/protoc \
 -DARROW_HOME=$deplocation/$platform/arrow/$version \
 -Dbenchmark_DIR=$deplocation/$platform/googlebenchmark/$version/lib/cmake/benchmark 
+-Dms_gsl_ROOT=$deplocation/$platform/ms_gsl/$version/include
 EOF
 )
 
@@ -126,5 +127,4 @@ else
   eval "$cmd"
 fi
 
-# -DMS_GSL_INCLUDE_DIR=$deplocation/$platform/ms_gsl/$version/include \
 
