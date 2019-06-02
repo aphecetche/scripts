@@ -95,7 +95,7 @@ cmake $source \
 -DProtobuf_PROTOC_LIBRARY=$deplocation/$platform/protobuf/$version/lib/libprotoc.$ddlext \
 -DProtobuf_INCLUDE_DIR=$deplocation/$platform/protobuf/$version/include \
 -DProtobuf_PROTOC_EXECUTABLE=$deplocation/$platform/protobuf/$version/bin/protoc \
--DARROW_HOME=$deplocation/$platform/arrow/$version \
+-Darrow_DIR=$deplocation/$platform/arrow/$version/lib/cmake/arrow \
 -Dbenchmark_DIR=$deplocation/$platform/googlebenchmark/$version/lib/cmake/benchmark 
 -Dms_gsl_ROOT=$deplocation/$platform/ms_gsl/$version/include
 EOF
