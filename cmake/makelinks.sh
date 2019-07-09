@@ -1,6 +1,8 @@
 #!/bin/sh
 
-prefix=${1:-$ALIBUILD_WORK_DIR/slc7_x86-64}
+suffix=$(aliBuild architecture)
+
+prefix=${1:-$ALIBUILD_WORK_DIR/${suffix}}
 label=${2:-latest}
 
 if ! test -d $prefix; then
