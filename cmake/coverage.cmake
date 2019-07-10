@@ -4,8 +4,6 @@ set(CTEST_BINARY_DIRECTORY "$ENV{HOME}/tmp/alice/cmake/O2")
 set(ENV{CXXFLAGS} --coverage)
 set(CTEST_COVERAGE_COMMAND gcov)
 
-set(CTEST_SUBMIT_URL "http://localhost:8080/submit.php?project=O2")
-
 set(CTEST_CMAKE_GENERATOR Ninja)
 set(CTEST_USE_LAUNCHERS YES)
 
@@ -24,9 +22,6 @@ ctest_configure(
   OPTIONS
   "-DBOOST_ROOT=$ENV{ALIBUILD_WORK_DIR}/${arch}/EXPERIMENTAL/boost;-DCMAKE_PREFIX_PATH=$ENV{ALIBUILD_WORK_DIR}/${arch}/EXPERIMENTAL"
   )
-
-ctest_submit(PARTS Start Configure)
 ctest_build()
-ctest_submit(PARTS Build)
 ctest_test()
 ctest_coverage()
