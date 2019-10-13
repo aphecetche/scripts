@@ -1,0 +1,16 @@
+[
+  "trigger",
+  "/Users/laurent/alice/dev/O2",
+  {
+    "name": "doxygen",
+    "expression": [
+      "anyof",
+      ["match", "**/*.h", "wholename"],
+      ["match", "**/*.cxx", "wholename"],
+      ["match", "**/*.inl", "wholename"],
+      ["match", "**/*.md", "wholename"]
+    ],
+    "command": ["cmake","--build","/Users/laurent/alice/dev/sw/BUILD/O2-latest/O2","--target","doc"],
+    "append_files": false
+  }
+]
