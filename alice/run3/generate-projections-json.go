@@ -50,6 +50,8 @@ func generateAlternates(w io.Writer) {
 	//
 	alternate(w, "Detectors/TPC/simulation", "TPCsimulation")
 	alternate(w, "Detectors/TPC/base", "TPCbase")
+	alternate(w, "Framework/Core", "Framework")
+	alternate(w, "Framework/Foundation", "Framework")
 }
 
 func main() {
