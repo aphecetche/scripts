@@ -45,6 +45,7 @@ func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MID/Clustering", "MIDClustering")
 	alternate(w, "Detectors/MUON/MID/Tracking", "MIDTracking")
 	alternate(w, "Detectors/MUON/MID/TestingSimTools", "MIDTestingSimTools")
+	alternate(w, "Detectors/MUON/MID/Workflow", "MIDWorkflow")
 	//
 	alternate(w, "Common/Field", "Field")
 	//
