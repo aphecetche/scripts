@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -22,9 +23,14 @@ func alternate(w io.Writer, base, include string) {
 		base, include)
 }
 
-func generate(w io.Writer) {
+func generate(w io.Writer, qc bool) {
 	fmt.Fprintf(w, "{\n")
-	generateAlternates(w)
+
+	if qc {
+		generateAlternatesQualityControl(w)
+	} else {
+		generateAlternates(w)
+	}
 
 	clangTidyBinary := "/Users/laurent/alice/sw/osx_x86-64/o2codechecker/latest/bin/O2codecheck"
 
@@ -33,6 +39,10 @@ func generate(w io.Writer) {
 	fmt.Fprintf(w, "}\n")
 }
 
+func generateAlternatesQualityControl(w io.Writer) {
+	alternate(w, "Modules/MCH", "MCH")
+	alternate(w, "Framework", "QualityControl")
+}
 func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MCH/Raw", "MCHRaw")
 	alternate(w, "Detectors/MUON/MCH/Simulation", "MCHSimulation")
@@ -56,5 +66,9 @@ func generateAlternates(w io.Writer) {
 }
 
 func main() {
-	generate(os.Stdout)
+	var qc = flag.Bool("qc", false, "generate for QualityControl instead of O2")
+
+	flag.Parse()
+	generate(os.Stdout, *qc)
+
 }
