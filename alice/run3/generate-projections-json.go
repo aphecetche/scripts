@@ -44,7 +44,9 @@ func generateAlternatesQualityControl(w io.Writer) {
 	alternate(w, "Framework", "QualityControl")
 }
 func generateAlternates(w io.Writer) {
-	alternate(w, "Detectors/MUON/MCH/Raw", "MCHRaw")
+	alternate(w, "Detectors/MUON/MCH/Raw/Decoder", "MCHRawDecoder")
+	alternate(w, "Detectors/MUON/MCH/Raw/Encoder", "MCHRawEncoder")
+	alternate(w, "Detectors/MUON/MCH/Raw/Common", "MCHRawCommon")
 	alternate(w, "Detectors/MUON/MCH/Simulation", "MCHSimulation")
 	alternate(w, "Detectors/MUON/MCH/Base", "MCHBase")
 	alternate(w, "Detectors/MUON/MCH/Mapping/SegContour", "MCHMappingSegContour")
