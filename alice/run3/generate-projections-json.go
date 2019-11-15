@@ -5,15 +5,19 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 )
 
 func alternate(w io.Writer, base, include string) {
+	// test -> include or implementation (first found)
+	fmt.Fprintf(w, "\"%s/src/test*.cxx\" : { \"type\":\"test\", \"alternate\": [ \"%s/include/%s/{}.h\", \"%s/src/{}.cxx\" ] },\n",
+		base, base, include, base)
 	// Implementation file -> test file or include file (first found)
-	fmt.Fprintf(w, "\"%s/src/*.cxx\" : { \"type\": \"source\", \"alternate\": [ \"%s/test/test{}.cxx\", \"%s/include/%s/{}.h\" ] },\n",
-		base, base, base, include)
+	fmt.Fprintf(w, "\"%s/src/*.cxx\" : { \"type\": \"source\", \"alternate\": [ \"%s/test/test{}.cxx\", \"%s/src/test{}.cxx\", \"%s/include/%s/{}.h\" ] },\n",
+		base, base, base, base, include)
 	// include -> implementation or test (first found)
-	fmt.Fprintf(w, "\"%s/include/%s/*.h\" : { \"type\": \"header\", \"alternate\": [ \"%s/src/{}.cxx\", \"%s/test/test{}.cxx\" ] },\n",
-		base, include, base, base)
+	fmt.Fprintf(w, "\"%s/include/%s/*.h\" : { \"type\": \"header\", \"alternate\": [ \"%s/src/{}.cxx\", \"%s/test/test{}.cxx\", \"%s/src/test{}.cxx\" ] },\n",
+		base, include, base, base, base)
 	// test -> include or implementation (first found)
 	fmt.Fprintf(w, "\"%s/test/test*.cxx\" : { \"type\":\"test\", \"alternate\": [ \"%s/include/%s/{}.h\"] },\n",
 		base, base, include)
@@ -61,10 +65,22 @@ func generateAlternates(w io.Writer) {
 	//
 	alternate(w, "Common/Field", "Field")
 	//
+	alternate(w, "Steer", "Steer")
+	//
 	alternate(w, "Detectors/TPC/simulation", "TPCsimulation")
 	alternate(w, "Detectors/TPC/base", "TPCbase")
+	//
 	alternate(w, "Framework/Core", "Framework")
 	alternate(w, "Framework/Foundation", "Framework")
+	//
+	alternate(w, "DataFormats/common", "CommonDataFormat")
+	alternate(w, "DataFormats/Headers", "Headers")
+	alternate(w, "DataFormats/Detectors/Common", "DetectorsCommonDataFormats")
+
+	a := []string{"EMCAL", "FIT/FDD", "FIT/FT0", "FIT/FV0", "ITSMFT/ITS", "ITSMFT/MFT", "MUON/MID", "TOF", "TPC"}
+	for _, det := range a {
+		alternate(w, "DataFormats/Detectors/"+det, "DataFormats"+path.Base(det))
+	}
 }
 
 func main() {
