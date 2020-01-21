@@ -62,6 +62,7 @@ func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MID/Tracking", "MIDTracking")
 	alternate(w, "Detectors/MUON/MID/TestingSimTools", "MIDTestingSimTools")
 	alternate(w, "Detectors/MUON/MID/Workflow", "MIDWorkflow")
+	alternate(w, "Detectors/MUON/MID/Raw", "MIDRaw")
 	//
 	alternate(w, "Common/Field", "Field")
 	//
@@ -69,6 +70,9 @@ func generateAlternates(w io.Writer) {
 	//
 	alternate(w, "Detectors/TPC/simulation", "TPCsimulation")
 	alternate(w, "Detectors/TPC/base", "TPCbase")
+	//
+	alternate(w, "Common/Constants", "CommonConstants")
+	alternate(w, "Common/Utils", "CommonUtils")
 	//
 	alternate(w, "Framework/Core", "Framework")
 	alternate(w, "Framework/Foundation", "Framework")
