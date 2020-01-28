@@ -70,6 +70,8 @@ func generateAlternates(w io.Writer) {
 	//
 	alternate(w, "Steer", "Steer")
 	//
+	alternate(w, "Detectors/Raw", "DetectorsRaw")
+	//
 	alternate(w, "Detectors/TPC/simulation", "TPCsimulation")
 	alternate(w, "Detectors/TPC/base", "TPCbase")
 	//
