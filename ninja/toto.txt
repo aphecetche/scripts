@@ -1,0 +1,8 @@
+build a
+build b
+build d build e || tata.dir
+build d build e || tete.dir/
+zob || tutu.dir
+no build
+build c || toto
+build d build e || titi
