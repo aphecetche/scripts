@@ -1,11 +1,16 @@
 #!/bin/sh
 
-# what=${1:-O2}
-#
-# cd $HOME/alice/sw/BUILD/$what-latest/$what 
-#
-# alienv --work-dir $HOME/alice/sw setenv $what/latest,CMake/latest -c cmake --build . -- install
+file=$1
+echo "file=$file"
 
-cd $ALIBUILD_WORK_DIR/BUILD/O2-latest/O2
+base=${ALIBUILD_WORK_DIR/sw/}
+file=${file/${base}/}
+
+what=$(echo $file | tr "/" "\n" | head -1)
+
+echo "what=$what"
+
+cd $ALIBUILD_WORK_DIR/BUILD/$what-latest/$what
+
 ninja
 
