@@ -57,6 +57,7 @@ func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MCH/Mapping/SegContour", "MCHMappingSegContour")
 	alternate(w, "Detectors/MUON/MCH/Mapping/Interface", "MCHMappingInterface")
 	alternate(w, "Detectors/MUON/MCH/Mapping/Factory", "MCHMappingFactory")
+	alternate(w, "Detectors/MUON/MCH/PreClustering", "MCHPreClustering")
 	//
 	alternate(w, "Detectors/MUON/MID/Simulation", "MIDSimulation")
 	alternate(w, "Detectors/MUON/MID/Base", "MIDBase")
@@ -80,6 +81,7 @@ func generateAlternates(w io.Writer) {
 	//
 	alternate(w, "Framework/Core", "Framework")
 	alternate(w, "Framework/Foundation", "Framework")
+	alternate(w, "Framework/Utils", "DPLUtils")
 	//
 	alternate(w, "DataFormats/common", "CommonDataFormat")
 	alternate(w, "DataFormats/Headers", "Headers")
