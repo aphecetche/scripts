@@ -9,6 +9,7 @@ import (
 )
 
 func alternate(w io.Writer, base, include string) {
+	// alternates for a "regular" directory with src include test subdirs
 	// test -> include or implementation (first found)
 	fmt.Fprintf(w, "\"%s/src/test*.cxx\" : { \"type\":\"test\", \"alternate\": [ \"%s/include/%s/{}.h\", \"%s/src/{}.cxx\" ] },\n",
 		base, base, include, base)
@@ -24,6 +25,25 @@ func alternate(w io.Writer, base, include string) {
 
 	// inl files : no alternate, but of type "inl"
 	fmt.Fprintf(w, "\"%s/include/%s/*.inl\" : { \"type\" : \"inl\" },\n",
+		base, include)
+}
+
+func alternateCompactSub(w io.Writer, base, include string) {
+	// alternates for directory where sources and tests are in the same
+	// sub directory
+	//
+	// test -> include or implementation (first found)
+	fmt.Fprintf(w, "\"%s/test*.cxx\" : { \"type\":\"test\", \"alternate\": [ \"%s/%s/{}.h\", \"%s/{}.cxx\" ] },\n",
+		base, base, include, base)
+	// Implementation file -> test file or include file (first found)
+	fmt.Fprintf(w, "\"%s/*.cxx\" : { \"type\": \"source\", \"alternate\": [ \"%s/test{}.cxx\", \"%s/%s/{}.h\" ] },\n",
+		base, base, base, include)
+	// include -> implementation or test (first found)
+	fmt.Fprintf(w, "\"%s/%s/*.h\" : { \"type\": \"header\", \"alternate\": [ \"%s/{}.cxx\", \"%s/test{}.cxx\" ] },\n",
+		base, include, base, base)
+
+	// inl files : no alternate, but of type "inl"
+	fmt.Fprintf(w, "\"%s/%s/*.inl\" : { \"type\" : \"inl\" },\n",
 		base, include)
 }
 
@@ -49,7 +69,8 @@ func generateAlternatesQualityControl(w io.Writer) {
 }
 func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MCH/Raw/Decoder", "MCHRawDecoder")
-	alternate(w, "Detectors/MUON/MCH/Raw/Encoder", "MCHRawEncoder")
+	alternateCompactSub(w, "Detectors/MUON/MCH/Raw/Encoder/Page", "../../MCHRawEncoder")
+	alternateCompactSub(w, "Detectors/MUON/MCH/Raw/Encoder/Payload", "../../MCHRawEncoder")
 	alternate(w, "Detectors/MUON/MCH/Raw/Common", "MCHRawCommon")
 	alternate(w, "Detectors/MUON/MCH/Raw/ElecMap", "MCHRawElecMap")
 	alternate(w, "Detectors/MUON/MCH/Simulation", "MCHSimulation")
@@ -58,6 +79,7 @@ func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MCH/Mapping/Interface", "MCHMappingInterface")
 	alternate(w, "Detectors/MUON/MCH/Mapping/Factory", "MCHMappingFactory")
 	alternate(w, "Detectors/MUON/MCH/PreClustering", "MCHPreClustering")
+	alternate(w, "Detectors/MUON/MCH/Workflow", "MCHWorkflow")
 	//
 	alternate(w, "Detectors/MUON/MID/Simulation", "MIDSimulation")
 	alternate(w, "Detectors/MUON/MID/Base", "MIDBase")
