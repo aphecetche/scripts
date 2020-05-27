@@ -22,7 +22,7 @@
 #
 # In aliBuild world, the easiest way to get a correct build env. is to do
 #
-# WORK_DIR=/path/to/sw/ && source $WORK_DIR/[PACKAGE]/latest/etc/profile.d/init.sh
+# WORK_DIR=/path/to/sw/ && source $WORK_DIR/[PACKAGE]/[platform]/latest/etc/profile.d/init.sh
 #
 # where [PACKAGE] is the package you are trying to get coverage for.
 #
@@ -60,19 +60,23 @@ set(CTEST_BINARY_DIRECTORY .)
 set(CTEST_USE_LAUNCHERS 1)
 
 # Setup for coverage build
-set(ENV{CXXFLAGS} "--coverage -g -O0")
+unset(ENV{CXXFLAGS})
+set(configureOptions
+        "-DCMAKE_CXX_FLAGS_INIT=--coverage -g -O0"
+        "-DCMAKE_EXE_LINKER_FLAGS_INIT=--coverage -g")
 set(CTEST_COVERAGE_COMMAND "gcov")
 
-ctest_start("Continuous")
-ctest_configure()
+ctest_start("Experimental")
+ctest_configure(OPTIONS "${configureOptions}")
+
 ctest_build(CAPTURE_CMAKE_ERROR ERR)
 
 if(ERR EQUAL -1)
         message(FATAL_ERROR "Build failed")
 endif()
 
-ctest_test(EXCLUDE_LABEL macro)
-ctest_coverage()
+ctest_test(EXCLUDE_LABEL "macro;long" INCLUDE_LABEL "mch" EXCLUDE "Detectors/Raw")
+ctest_coverage(LABELS mch)
 
 # After the coverage files have been generated, process them
 # with lcov and genhtml (if available) OR grcov (if available)
