@@ -57,16 +57,26 @@ endif()
 # Set source and build directories
 set(CTEST_SOURCE_DIRECTORY ${SOURCEDIR})
 set(CTEST_BINARY_DIRECTORY .)
-set(CTEST_USE_LAUNCHERS 1)
+set(ENV{CTEST_USE_LAUNCHERS_DEFAULT} ON)
+
+# After the coverage files have been generated, we will process them
+# with lcov so it _must_ be available
+#
+find_program(LCOV_EXECUTABLE lcov)
+if(NOT LCOV_EXECUTABLE)
+        message(FATAL_ERROR "Could not find lcov program")
+endif()
+
+# We will generate html report if genhtml is available
+find_program(GENHTML_EXECUTABLE genhtml)
 
 # Setup for coverage build
 unset(ENV{CXXFLAGS})
-set(configureOptions
-        "-DCMAKE_CXX_FLAGS_INIT=--coverage -g -O0"
-        "-DCMAKE_EXE_LINKER_FLAGS_INIT=--coverage -g")
+set(configureOptions "-DCMAKE_CXX_FLAGS=--coverage -g -O0")
+
 set(CTEST_COVERAGE_COMMAND "gcov")
 
-ctest_start("Experimental")
+ctest_start("Coverage")
 ctest_configure(OPTIONS "${configureOptions}")
 
 ctest_build(CAPTURE_CMAKE_ERROR ERR)
@@ -75,71 +85,99 @@ if(ERR EQUAL -1)
         message(FATAL_ERROR "Build failed")
 endif()
 
-ctest_test(EXCLUDE_LABEL "macro;long" INCLUDE_LABEL "mch" EXCLUDE "Detectors/Raw")
-ctest_coverage(LABELS mch)
+ctest_test()
+ctest_coverage()
 
-# After the coverage files have been generated, process them
-# with lcov and genhtml (if available) OR grcov (if available)
+if(LCOV_EXECUTABLE)
+        set(COVERAGE_INFO_FILE coverage.info)
+        set(HTML_OUTPUT_DIRECTORY "${CTEST_BINARY_DIRECTORY}/coverage-html")
 
-find_program(GRCOV_EXECUTABLE grcov)
-find_program(LCOV_EXECUTABLE lcov)
-find_program(GENHTML_EXECUTABLE genhtml)
+        # first lcov collection step to get the baseline (uses only gcdo files,
+        # but all of them)
 
-if(GRCOV_EXECUTABLE)
-        execute_process(COMMAND ${GRCOV_EXECUTABLE}
-                "-t"
-                "html"
-                "-s"
-                "${CTEST_SOURCE_DIRECTORY}"
-                WORKING_DIRECTORY ${CTEST_BINARY_DIRECTORY})
-else()
-        if(LCOV_EXECUTABLE)
-                set(COVERAGE_INFO_FILE coverage.info)
-                set(HTML_OUTPUT_DIRECTORY "${CTEST_BINARY_DIRECTORY}/coverage-html")
+        message(STATUS "Collect baseline coverage information")
 
-                list(APPEND EXCLUDE_LIST
-                        '*/usr/*'
-                        '*/boost/*'
-                        '*/ROOT/*'
-                        '*/FairRoot/*'
-                        '*/G__*Dict*'
-                        '*/G__*.cxx)
-                execute_process(COMMAND ${LCOV_EXECUTABLE}
-                        "--directory"
-                        "${CTEST_BINARY_DIRECTORY}"
-                        "--base-directory"
-                        "${CTEST_SOURCE_DIRECTORY}"
-                        "--capture"
-                        "--no-external"
+        execute_process(COMMAND ${LCOV_EXECUTABLE}
+                "--directory"
+                "${CTEST_BINARY_DIRECTORY}"
+                "--capture"
+                "--initial"
+                "--quiet"
+                "--output-file"
+                "${COVERAGE_INFO_FILE}.zero")
+ 
+        # second lcov collection step now using the gcda files, i.e. only
+        # the files that were involved in testing
+
+        message(STATUS "Collect coverage information after tests")
+
+        execute_process(COMMAND ${LCOV_EXECUTABLE}
+                "--directory"
+                "${CTEST_BINARY_DIRECTORY}"
+                "--capture"
+                "--exclude"
+                "${CTEST_BINARY_DIRECTORY}/*"
+                "--quiet"
+                "--output-file"
+                "${COVERAGE_INFO_FILE}.test")
+
+        # merge two steps
+
+        message(STATUS "Merge baseline and after-tests coverate results")
+
+        execute_process(COMMAND ${LCOV_EXECUTABLE}
+                "--add-tracefile"
+                "${COVERAGE_INFO_FILE}.test"
+                "--add-tracefile"
+                "${COVERAGE_INFO_FILE}.zero"
+                "--quiet"
+                "--output-file"
+                "${COVERAGE_INFO_FILE}.total")
+
+        # extract what we want
+
+        message(STATUS "Extract wanted information from ${COVERAGE_INFO_FILE}")
+
+        execute_process(COMMAND ${LCOV_EXECUTABLE}
+                "--extract"
+                "${COVERAGE_INFO_FILE}.total"
+                "${CTEST_SOURCE_DIRECTORY}/*"
+                "--quiet"
+                "--output-file"
+                "${COVERAGE_INFO_FILE}")
+
+        # remove unit tests themselves from the report
+        # filtering by name is probably not perfect here
+        # but better than nothing
+        # FIXME: get the list of tests using ctest itself ? 
+
+        message(STATUS "Remove unwanted information from ${COVERAGE_INFO_FILE}")
+
+        execute_process(COMMAND ${LCOV_EXECUTABLE}
+                "--remove"
+                "${COVERAGE_INFO_FILE}"
+                "*/test*"
+                "--quiet"
+                "--output-file"
+                "${COVERAGE_INFO_FILE}")
+
+        # finally generate a html report
+        if(GENHTML_EXECUTABLE)
+
+                message(STATUS "Generating html report")
+
+                execute_process(COMMAND ${GENHTML_EXECUTABLE}
+                        "${COVERAGE_INFO_FILE}"
+                        "--ignore-errors"
+                        "source"
+                        "--legend"
+                        "--show-details"
                         "--quiet"
-                        "--output-file"
-                        "${COVERAGE_INFO_FILE}")
-
-                foreach(EX in EXCLUDE_LIST)
-                        set(cmd
-                                ${LCOV_EXECUTABLE}
-                                "--remove"
-                                "${COVERAGE_INFO_FILE}"
-                                "${EX}"
-                                "--output-file"
-                                "${COVERAGE_INFO_FILE}")
-                        message(STATUS "cmd=${cmd}")
-                        execute_process(COMMAND ${cmd})
-                endforeach()
-
-                # the part below generates a local html report
-
-                if(GENHTML_EXECUTABLE)
-                        execute_process(COMMAND ${GENHTML_EXECUTABLE}
-                                "${COVERAGE_INFO_FILE}"
-                                "--ignore-errors"
-                                "source"
-                                "--output-directory"
-                                "${HTML_OUTPUT_DIRECTORY}")
-                else()
-                        message(STATUS "genhtml command not found : not using it")
-                endif()
+                        "--output-directory"
+                        "${HTML_OUTPUT_DIRECTORY}")
         else()
-                message(STATUS "lcov command not found : not using it")
+                message(STATUS "genhtml command not found : not using it")
         endif()
+else()
+        message(STATUS "lcov command not found : not using it")
 endif()

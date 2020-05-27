@@ -69,8 +69,7 @@ func generateAlternatesQualityControl(w io.Writer) {
 }
 func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MCH/Raw/Decoder", "MCHRawDecoder")
-	alternateCompactSub(w, "Detectors/MUON/MCH/Raw/Encoder/Page", "../../MCHRawEncoder")
-	alternateCompactSub(w, "Detectors/MUON/MCH/Raw/Encoder/Payload", "../../MCHRawEncoder")
+	alternateCompactSub(w, "Detectors/MUON/MCH/Raw/EncoderPayload", "MCHRawEncoderPayload")
 	alternate(w, "Detectors/MUON/MCH/Raw/Common", "MCHRawCommon")
 	alternate(w, "Detectors/MUON/MCH/Raw/ElecMap", "MCHRawElecMap")
 	alternate(w, "Detectors/MUON/MCH/Simulation", "MCHSimulation")
