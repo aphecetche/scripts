@@ -79,6 +79,7 @@ func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MCH/Mapping/Factory", "MCHMappingFactory")
 	alternate(w, "Detectors/MUON/MCH/PreClustering", "MCHPreClustering")
 	alternate(w, "Detectors/MUON/MCH/Workflow", "MCHWorkflow")
+	alternate(w, "Detectors/MUON/MCH/Conditions", "MCHConditions")
 	//
 	alternate(w, "Detectors/MUON/MID/Simulation", "MIDSimulation")
 	alternate(w, "Detectors/MUON/MID/Base", "MIDBase")
@@ -93,6 +94,7 @@ func generateAlternates(w io.Writer) {
 	alternate(w, "Steer", "Steer")
 	//
 	alternate(w, "Detectors/Raw", "DetectorsRaw")
+	alternate(w, "Detectors/DCS", "DetectorsDCS")
 	//
 	alternate(w, "Detectors/TPC/simulation", "TPCsimulation")
 	alternate(w, "Detectors/TPC/base", "TPCbase")
