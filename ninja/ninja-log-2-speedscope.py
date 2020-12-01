@@ -38,6 +38,7 @@ def read_logfile(log):
 
 def group_targets(targets):
     groups = [ "^GPU","^Steer","^Detectors","^Framework",
+              "^Analysis",
               "^Framework/Core",
               "^Framework/TestWorkflows",
               "^Analysis",
