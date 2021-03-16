@@ -6,7 +6,7 @@ q="
 query {
     search(type: ISSUE,
             last: 100,
-            query:\"merged:>=$startDate repo:AliceO2Group/AliceO2 is:pr is:merged $authors\") 
+            query:\"merged:>=$startDate repo:AliceO2Group/AliceO2 is:pr $authors\") 
             {
               edges {
                 node {
@@ -22,7 +22,15 @@ query {
             }
 }"
                                      
-jqfilter='.data.search.edges[] | (.node.number| tostring )+" " + (.node.mergedAt|fromdate|strftime("%Y-%m-%d")) + " " + .node.title + " (" + .node.author.login +") "'
+jqfilter='.data.search.edges 
+|=sort_by(.node.mergedAt) 
+| .data.search.edges 
+| reverse 
+| .[]  
+|
+  (.node.number| tostring )+" " +
+  (.node.mergedAt|fromdate|strftime("%Y-%m-%d")) + " " + .node.title + " (" +
+  .node.author.login +")"'
 
 gh api graphql --paginate -f query=$q | jq -r $jqfilter
 
