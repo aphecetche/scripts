@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import re
@@ -9,7 +9,7 @@ def read_logfile(log):
     assert m, "unrecognized ninja log version %r" % header
     version = int(m.group(1))
     assert 5 <= version <= 6, "unsupported ninja log version %d" % version
-    if version == 6:
+    if version == 6 or version == 5:
         # Skip header line
         next(log)
 
@@ -17,6 +17,8 @@ def read_logfile(log):
     last_end_seen = 0
     for line in log:
         start, end, _, name, cmdhash = line.strip().split('\t') # Ignore restat.
+        if re.match("CMakeFiles",name):
+            continue
         if int(end) < last_end_seen:
             # An earlier time stamp means that this step is the first in a new
             # build, possibly an incremental build. Throw away the previous data
@@ -82,7 +84,8 @@ def group_targets(targets):
               "^Common/MathUtils",
               "^Common/Utils",
               "^Common/SimConfig",
-              "^Examples"
+              "^Examples",
+              "^stage"
 
                  ]
     for t in targets:
