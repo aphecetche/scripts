@@ -33,13 +33,13 @@ func alternateCompactSub(w io.Writer, base, include string) {
 	// sub directory
 	//
 	// test -> include or implementation (first found)
-	fmt.Fprintf(w, "\"%s/test*.cxx\" : { \"type\":\"test\", \"alternate\": [ \"%s/%s/{}.h\", \"%s/{}.cxx\" ] },\n",
+	fmt.Fprintf(w, "\"%s/test*.cxx\" : { \"type\":\"test\", \"alternate\": [ \"%s/include/%s/{}.h\", \"%s/{}.cxx\" ] },\n",
 		base, base, include, base)
 	// Implementation file -> test file or include file (first found)
-	fmt.Fprintf(w, "\"%s/*.cxx\" : { \"type\": \"source\", \"alternate\": [ \"%s/test{}.cxx\", \"%s/%s/{}.h\" ] },\n",
+	fmt.Fprintf(w, "\"%s/*.cxx\" : { \"type\": \"source\", \"alternate\": [ \"%s/test{}.cxx\", \"%s/include/%s/{}.h\" ] },\n",
 		base, base, base, include)
 	// include -> implementation or test (first found)
-	fmt.Fprintf(w, "\"%s/%s/*.h\" : { \"type\": \"header\", \"alternate\": [ \"%s/{}.cxx\", \"%s/test{}.cxx\" ] },\n",
+	fmt.Fprintf(w, "\"%s/include/%s/*.h\" : { \"type\": \"header\", \"alternate\": [ \"%s/{}.cxx\", \"%s/test{}.cxx\" ] },\n",
 		base, include, base, base)
 
 	// inl files : no alternate, but of type "inl"
@@ -69,7 +69,8 @@ func generateAlternatesQualityControl(w io.Writer) {
 }
 func generateAlternates(w io.Writer) {
 	alternate(w, "Detectors/MUON/MCH/Raw/Decoder", "MCHRawDecoder")
-	alternateCompactSub(w, "Detectors/MUON/MCH/Raw/EncoderPayload", "MCHRawEncoderPayload")
+	alternateCompactSub(w, "Detectors/MUON/MCH/Raw/Encoder/Payload", "MCHRawEncoderPayload")
+	alternateCompactSub(w, "Detectors/MUON/MCH/Raw/Encoder/Digit", "MCHRawEncoderDigit")
 	alternate(w, "Detectors/MUON/MCH/Raw/Common", "MCHRawCommon")
 	alternate(w, "Detectors/MUON/MCH/Raw/ElecMap", "MCHRawElecMap")
 	alternate(w, "Detectors/MUON/MCH/Simulation", "MCHSimulation")
