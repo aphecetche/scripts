@@ -39,6 +39,8 @@ do_query() {
 
 lastCursor=''
 
+rm pr-stats.json
+
 for index in {0..10} 
 do
 
@@ -46,9 +48,9 @@ result=$(do_query $lastCursor)
 
 lastCursor=$(get_first_cursor $result)
 
-echo $result > pr-stats.json
+echo $result >> pr-stats.json
 
 done
 
-echo "pr number, lead time in days"
-cat pr-stats.json | jq -r '.data.repository.pullRequests.edges| .[] | (.node.number|tostring) + "," + (((.node.mergedAt|fromdate)-(.node.createdAt|fromdate))/3600/24|tostring)'
+echo "pr number,lead time in days,author"
+cat pr-stats.json | jq -r '.data.repository.pullRequests.edges| .[] | (.node.number|tostring) + "," + (((.node.mergedAt|fromdate)-(.node.createdAt|fromdate))/3600/24|tostring) + "," + .node.author.login'
