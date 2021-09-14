@@ -52,5 +52,7 @@ echo $result >> pr-stats.json
 
 done
 
-echo "pr number,lead time in days,author"
-cat pr-stats.json | jq -r '.data.repository.pullRequests.edges| .[] | (.node.number|tostring) + "," + (((.node.mergedAt|fromdate)-(.node.createdAt|fromdate))/3600/24|tostring) + "," + .node.author.login'
+echo "pr number,lead time in days,author" > pr-stats.csv
+cat pr-stats.json | jq -r '.data.repository.pullRequests.edges| .[] | (.node.number|tostring) + "," + (((.node.mergedAt|fromdate)-(.node.createdAt|fromdate))/3600/24|tostring) + "," + .node.author.login' >> pr-stats.csv
+
+cat pr-stats.csv
