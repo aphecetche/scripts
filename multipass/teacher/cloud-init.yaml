@@ -1,0 +1,26 @@
+#cloud-config
+
+package_update: true
+
+packages:
+  - build-essential
+  - unzip
+  - gfortran
+  - ninja-build
+  - cmake
+  - python3-dev
+  - python-is-python3
+  - python3-venv
+  - tree
+  - ncdu
+  - ripgrep
+
+runcmd:
+    - git clone "https://github.com/nantes-m2-rps-exp/spack-repo" /home/ubuntu/nantes-m2-rps-exp/spack-repo
+    - git clone "https://github.com/nantes-m2-rps-exp/qqbar2mumu-2021" /home/ubuntu/nantes-m2-rps-exp/qqbar2mumu-2021
+    - git clone -c feature.manyFiles=true "https://github.com/spack/spack.git" /home/ubuntu/spack
+    - cd /home/ubuntu/spack && git checkout 5319b6e3b1fb4217fe57cbbf511bb9757b7afa31
+    - chown -R ubuntu.ubuntu /home/ubuntu/
+
+final_message: "The system is finally up, after $UPTIME seconds"
+

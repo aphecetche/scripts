@@ -1,0 +1,3 @@
+echo "hello there"
+spack load qqbar2mumu-2021
+spack find --loaded
