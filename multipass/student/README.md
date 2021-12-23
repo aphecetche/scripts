@@ -1,8 +1,10 @@
 # Using multipass and spack to get a working environment
 
-## multipass installation
+## Multipass installation
 
-## virtual machine installation
+Head to [multipass](https://multipass.run) homepage and follow the instrutions there to install the multipass product.
+
+## Virtual machine installation
 
 Execute the following command :
 
@@ -28,16 +30,49 @@ Name                    State             IPv4             Image
 qqbar2mumu              Running           172.16.81.14     Ubuntu 20.04 LTS
 ```
 
+## Virtual machine usage to start a Jupyter Lab server
+
 The main use case for that virtual machine is to launch a Jupyter Lab server ,
 which can be done using the `start` convenience command that's defined in that
 vm for you :
 
+<details>
+<summary>`multipass exec qqbar2mumu start`</summary>
+
 ```shell
 $ multipass exec qqbar2mumu start
+[I 2021-12-24 00:08:27.829 ServerApp] jupyterlab | extension was successfully linked.
+[I 2021-12-24 00:08:27.859 LabApp] JupyterLab extension loaded from /home/ubuntu/spack/opt/spack/linux-ubuntu20.04-haswell/gcc-9.3.0/py-jupyterlab-3.2.1-veeoqqjxqx5un4b2oq3c2iispchd25cr/lib/python3.8/site
+-packages/jupyterlab
+[I 2021-12-24 00:08:27.859 LabApp] JupyterLab application directory is /home/ubuntu/spack/opt/spack/linux-ubuntu20.04-haswell/gcc-9.3.0/py-jupyterlab-3.2.1-veeoqqjxqx5un4b2oq3c2iispchd25cr/share/jupyter/l
+ab
+[I 2021-12-24 00:08:27.864 ServerApp] jupyterlab | extension was successfully loaded.
+[I 2021-12-24 00:08:27.865 ServerApp] Serving notebooks from local directory: /home/ubuntu/nantes-m2-rps-exp/qqbar2mumu-2021
+[I 2021-12-24 00:08:27.865 ServerApp] Jupyter Server 1.11.2 is running at:
+[I 2021-12-24 00:08:27.865 ServerApp] http://172.16.81.14:8888/lab?token=282695122119c7cd9c16e096303a3290e387a9792bbafa8a
+[I 2021-12-24 00:08:27.865 ServerApp]  or http://127.0.0.1:8888/lab?token=282695122119c7cd9c16e096303a3290e387a9792bbafa8a
+[I 2021-12-24 00:08:27.865 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 2021-12-24 00:08:27.870 ServerApp]
+
+    To access the server, open this file in a browser:
+        file:///home/ubuntu/.local/share/jupyter/runtime/jpserver-21489-open.html
+    Or copy and paste one of these URLs:
+        http://172.16.81.14:8888/lab?token=282695122119c7cd9c16e096303a3290e387a9792bbafa8a
+     or http://127.0.0.1:8888/lab?token=282695122119c7cd9c16e096303a3290e387a9792bbafa8a
+
 ```
+
+</details>
+
+Click (or copy and paste, depending on your terminal capabilities) on the `http://172.../lab?token=....`  to enter a fully functional Jupyter Lab server which gets all (or almost all) the Python modules you'll need to complete the project.
+
+## Doing more with the virtual machine
 
 Occasionally you may need to use it for other things (e.g. to download the
  data), in which case you'll need to "enter" the vm :
+
+<details>
+<summary>`multipass shell qqbar2mumu`</summary>
 
 ```shell
 $ multipass shell qqbar2mumu
@@ -66,3 +101,23 @@ See "man sudo_root" for details.
 📦qqbar2mumu-2021ubuntu@qqbar2mumu:~$
 ```
 
+</details>
+
+### Using python packages
+
+If you want to use Python packages the first thing you'll probably want to do is to enter the `qqbar2mumu-2021` environment and load the corresponding packages :
+
+```shell
+cd ~/nantes-m2-rps-exp/qqbar2mumu-2021
+spacktivate . 
+spack load qqbar2mumu-2021
+```
+
+### Downloading data
+
+If you just want to download the full (real) data set, do :
+
+```shell
+cd ~/nantes-m2-rps-exp/qqbar2mumu-2021
+./copy-data-locally.sh
+```
