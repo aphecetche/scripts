@@ -16,8 +16,7 @@ gpg:               imported: 1
 gpg: inserting ownertrust of 6
 ```
 
-It should take a few minutes (below 10 minutes, depending on your network connection speed)
- to complete.
+It should take of the order of ten minutes (depending on your network connection speed) to complete.
 
 Note that the public key hash will be different from the output above.
 
@@ -34,7 +33,7 @@ which can be done using the `start` convenience command that's defined in that
 vm for you :
 
 ```shell
-$ multipass exec start
+$ multipass exec qqbar2mumu start
 ```
 
 Occasionally you may need to use it for other things (e.g. to download the

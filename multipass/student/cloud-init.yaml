@@ -21,6 +21,13 @@ write_files:
         local_filesystem: file:///home/ubuntu/mirror
     path: /home/ubuntu/.spack/mirrors.yaml
     permissions: '0644'
+  - content: |
+      . /home/ubuntu/spack/share/spack/setup-env.sh
+      spack env activate /home/ubuntu/nantes-m2-rps-exp/qqbar2mumu-2021
+      spack load qqbar2mumu-2021
+      jupyter lab --no-browser --ip $(hostname -I) --notebook-dir /home/ubuntu/nantes-m2-rps-exp/qqbar2mumu-2021
+    path: /usr/local/bin/start
+    permissions: '0755'
 
 runcmd:
     - git clone "https://github.com/nantes-m2-rps-exp/spack-repo" /home/ubuntu/nantes-m2-rps-exp/spack-repo
