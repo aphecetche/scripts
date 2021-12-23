@@ -1,6 +1,6 @@
 # Using multipass to create a Spack build cache
 
-Create a multipass vm using :
+Create a multipass virtual machine using :
 
 ```shell
 $ ./create-vm.sh 
@@ -16,8 +16,10 @@ m2exp                   Running           172.16.81.15     Ubuntu 20.04 LTS
 
 Enter the instance :
 
+<details>
+  <summary>multipass shell m2exp</summary>
+
 ```shell
-$ multipass shell m2exp
 Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-91-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -43,18 +45,30 @@ See "man sudo_root" for details.
 📦ubuntu@m2exp:~$
 ```
 
-Activate the relevant Spack environment and install it :
+</details>
+
+Activate the relevant Spack environment :
+
+<details>
+  <summary>spack activate ~/nantes-m2-rps-exp/qqbar2mumu-2021</summary>
 
 ```shell
-$ cd ~/nantes-m2-rps-exp/qqbar2mumu-2021
-📦ubuntu@m2exp:~/nantes-m2-rps-exp/qqbar2mumu-2021$
+📦ubuntu@m2exp:~ spack activate ~/nantes-m2-rps-exp/qqbar2mumu-2021
+📦qqbar2mumu-2021ubuntu@m2exp:~ 
+```
 
-$ spack env activate . 
-📦qqbar2mumu-2021ubuntu@m2exp:~/nantes-m2-rps-exp/qqbar2mumu-2021$
+</details>
 
+Once in a Spack environment, all Spack commands are now specific to this environment. So to install it just do :
+
+<details>
+<summary>spack install</summary>
+
+```shell
 $ time spack install
 ...snip..
 ```
+</details>
 
 Note that the install stage _is_ a long process (2-3 hours) as everything is built from
 and follow the lines below to install the packages, create a buildcache from
@@ -63,6 +77,9 @@ not have to be exposed to such a large installation time.
 
 A this point the `qqbar2mumu-2021` package and all its dependencies  have been
 installed.
+
+<details>
+<summary>`spack find`</summary>
 
 ```shell
 📦qqbar2mumu-2021ubuntu@m2exp:~/nantes-m2-rps-exp/qqbar2mumu-2021$ spack find
@@ -79,17 +96,25 @@ bzip2@1.0.8                  py-deprecation@2.1.0          py-pyparsing@3.0.6
 
 ```
 
-Next step is to "package" then into a build cache. For this a GPG
+</details>
+
+Next step is to "package" them into a build cache. For this a GPG
 key is required (for signing the binaries)
+
+<details>
+<summary>`spack gpg create "m2exp" "m2exp@example.com"`</summary>
 
 ```shell
 $ spack gpg create "m2exp" "m2exp@example.com"
-==> Pushing binary packages to file:///home/ubuntu/mirror/build_cache
-...snip...
 ```
+
+</details>
 
 Each package is added to the build cache (this phase also takes some time
 because of the signing part mainly) :
+
+<details>
+<summary>`spack buildcache create --allow-root --force -d ~/mirror --only=package <spec>`</summary>
 
 ```shell
 $ for ii in $(spack find --format "yyy {version} /{hash}" | 
@@ -99,7 +124,11 @@ $ for ii in $(spack find --format "yyy {version} /{hash}" |
   do 
       spack buildcache create --allow-root --force -d ~/mirror --only=package $ii 
   done 
+==> Pushing binary packages to file:///home/ubuntu/mirror/build_cache
+...snip...
 ```
+
+</details>
 
 For the build cache to be of any use, it then **must** be indexed :
 
@@ -112,13 +141,15 @@ Finally the build cache (a subdirectory of the `mirror` one) is turned into an
 archive to be transportable to other machines :
 
 ```shell
-$ tar zvcf ~/mirror.tar.gz ~/mirror
+$ cd ~ && tar zvcf mirror.tar.gz mirror
+...
 ```
 
 Retrieve the archive of the buildcache :
 
 ```shell
-$ multipass transfer m2exp:mirror.tar.gz mirror.tar.gz
+$ multipass transfer m2exp:mirror.tar.gz .
+...
 ```
 
 Put that archive on some publicly available server (e.g. your cernbox with a
