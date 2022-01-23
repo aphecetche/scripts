@@ -14,6 +14,7 @@ packages:
   - bison
   - build-essential
   - cmake
+  - cmake-curses-gui
   - curl
   - environment-modules
   - flex
