@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+conf=json://$HOME/cernbox/o2muon/qc/qc_configs/qc-$1.json
+shift
+echo "o2-qc --config ${conf}"
+o2-qc --config ${conf} --local --host localhost $@
