@@ -1,4 +1,3 @@
-
 config="MCHTracking.chamberResolutionX=1;MCHTracking.chamberResolutionY=1;MCHTracking.refineTracks=false"
 shared_mem_size=16000000000
 
