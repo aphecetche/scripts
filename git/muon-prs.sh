@@ -1,7 +1,7 @@
 startDate=$1
 
-#authors="author:aferrero2707 author:pillot author:aphecetche author:dstocco"
-authors="author:aphecetche"
+authors="author:aferrero2707 author:pillot author:aphecetche author:dstocco author:javierecc"
+#authors="author:aphecetche"
 
 q="
 query {

@@ -1,0 +1,16 @@
+[
+    "trigger",
+    "/Users/laurent/alice",
+    {
+        "name": "compile_commands",
+        "expression": [
+            "pcre",
+            "spack-build-[a-z0-9]{7}\/compile_commands\\.json",
+            "wholename"
+        ],
+        "command": [
+            "/Users/laurent/github.com/aphecetche/scripts/watchman/compile-commands/compile-commands.sh"
+        ],
+        "append_files": true
+    }
+]

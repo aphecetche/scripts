@@ -1,0 +1,11 @@
+[
+    "query",
+    "/Users/laurent/alice",
+    {
+        "expression": [
+            "pcre",
+            "(spack-build-[a-z0-9]{7})\/compile_commands\\.json",
+            "wholename"
+        ]
+    }
+]
