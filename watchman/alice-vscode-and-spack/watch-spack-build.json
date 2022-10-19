@@ -1,0 +1,15 @@
+[
+    "trigger",
+    "/Users/laurent/alice",
+    {
+        "name": "spack_build",
+        "expression": [
+            "pcre",
+            "spack-build-[a-z0-9]{7}"
+        ],
+        "command": [
+            "/Users/laurent/github.com/aphecetche/scripts/watchman/alice-vscode-and-spack/spack-build.sh"
+        ],
+        "append_files": true
+    }
+]

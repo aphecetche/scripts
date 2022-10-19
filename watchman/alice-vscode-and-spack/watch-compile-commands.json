@@ -9,7 +9,7 @@
             "wholename"
         ],
         "command": [
-            "/Users/laurent/github.com/aphecetche/scripts/watchman/compile-commands/compile-commands.sh"
+            "/Users/laurent/github.com/aphecetche/scripts/watchman/alice-vscode-and-spack/compile-commands.sh"
         ],
         "append_files": true
     }
