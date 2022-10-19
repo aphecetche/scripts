@@ -5,7 +5,7 @@
         "name": "compile_commands",
         "expression": [
             "pcre",
-            "spack-build-[a-z0-9]{7}\/compile_commands\\.json",
+            "spack-build-[a-z0-9]{7}\/compile_commands\\.json$",
             "wholename"
         ],
         "command": [

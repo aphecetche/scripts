@@ -1,17 +1,22 @@
 #!/bin/sh
 
 root=$HOME/alice
-#log=$HOME/tmp/toto.log
-
-#echo $(date) "$1" >> $log
 
 file=$root/$1
 
-cd $(dirname $root/$1)
+
+dir=$(dirname $root/$1)
+cd $dir
 cd ..
 
-#echo $PWD >> $log
-
 if [[ -f $file ]]; then
-  ln -s $file .
+  # file is created
+  ln -sf $file .
+elif [[ ! -e $file ]]; then
+  # file is removed
+  # watchman log error "file $file is removed. dir=$dir"
+  cd $(dirname $dir)
+  if [[ -L compile_commands.json ]]; then 
+    rm compile_commands.json
+  fi
 fi
