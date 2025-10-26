@@ -7,6 +7,8 @@ dir=${1:-$(pwd)}
 function checkdir() {
         pushd $1 > /dev/null
         cd ..
+        # Fetch remote refs silently
+        git fetch --quiet --all --prune
         git status -bs | grep "^##" | grep ahead > /dev/null
         if [[ $? -eq 0 ]]; then
                 echo "AHEAD"
@@ -16,6 +18,15 @@ function checkdir() {
                         echo "LOCAL MODS"
                 fi
         fi
+
+        # Loop through local branches
+        for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
+          # Check if a remote tracking branch exists
+          if ! git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+            echo "🌱 $branch (no remote branch found)"
+          fi
+        done
+
         popd > /dev/null
 }
 
