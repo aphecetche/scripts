@@ -1,7 +1,7 @@
 startDate=$1
 
-authors="author:aferrero2707 author:pillot author:aphecetche author:dstocco author:javierecc"
-#authors="author:aphecetche"
+authors="author:pillot author:aphecetche author:dstocco author:grasseau author:aferrero2707 author:mwinn2 author:javierrc"
+#authors="author:aferrero2707 author:pillot author:aphecetche author:dstocco author:javierecc author:grasseau author:mwinn2"
 
 q="
 query {
@@ -29,7 +29,9 @@ jqfilter='.data.search.edges
 | reverse 
 | .[]  
 |
-  (.node.number| tostring )+" " +
+  "[" + (.node.number| tostring ) + 
+  "](https://github.com/AliceO2Group/AliceO2/pull/" + 
+  (.node.number| tostring) + ") "+
   (.node.mergedAt|fromdate|strftime("%Y-%m-%d")) + " " + .node.title + " (" +
   .node.author.login +")"'
 
