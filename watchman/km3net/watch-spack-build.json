@@ -1,0 +1,15 @@
+[
+    "trigger",
+    "/Users/laurent/km3net",
+    {
+        "name": "spack_build",
+        "expression": [
+            "pcre",
+            "spack-build-[a-z0-9]{7}$"
+        ],
+        "command": [
+            "/Users/laurent/github.com/aphecetche/scripts/watchman/km3net/spack-build.sh"
+        ],
+        "append_files": true
+    }
+]
